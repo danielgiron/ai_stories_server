@@ -40,7 +40,8 @@ app.post("/gpt", async (req, res) => {
     messages: [
       {
         role: "system",
-        content: `${process.env.GAME_DETAILS}`,
+        content: `You're a helpful assistant.}`,
+        // content: `${process.env.GAME_DETAILS}`,
       },
       { role: "user", content: `${message}` },
     ],
