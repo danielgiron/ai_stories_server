@@ -41,9 +41,8 @@ app.post("/gpt", async (req, res) => {
     messages: [
       {
         role: "system",
-        content: `${
-          process.env.GAME_DETAILS
-        } The player desires the location to be ${"abandoned zoo"}.`,
+        content: `You're a helpful assistant.}`,
+        // content: `${process.env.GAME_DETAILS}`,
       },
     ],
   });
