@@ -8,6 +8,7 @@ const cors = require("cors");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 
 const OpenAI = require("openai");
 const { Configuration, OpenAIApi } = OpenAI;
@@ -33,19 +34,20 @@ app.post("/gpt", async (req, res) => {
 
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-    max_tokens: 100,
+    max_tokens: 150,
     temperature: 1.4,
     frequency_penalty: 1,
     presence_penalty: 1,
     messages: [
       {
         role: "system",
-        content: `${process.env.GAME_DETAILS}`,
+        content: `${
+          process.env.GAME_DETAILS
+        } The player desires the location to be ${"abandoned zoo"}.`,
       },
-      { role: "user", content: `${message}` },
     ],
   });
   const text = completion?.data.choices[0].message;
-  console.log(text);
+  // console.log(text);
   res.send(text);
 });
