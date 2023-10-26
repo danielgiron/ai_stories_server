@@ -21,7 +21,7 @@ const openai = new OpenAIApi(configuration);
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-  console.log(`Listening on Port ${PORT}.`);
+  console.log(`Listening on Port ${PORT}. aIrina up.`);
 });
 
 app.get("/home", (req, res) => {
@@ -29,24 +29,25 @@ app.get("/home", (req, res) => {
   res.send("Connected to /home");
 });
 
-app.post("/gpt", async (req, res) => {
-  const { message } = req.body;
+app.post("/story", async (req, res) => {
+  let { messages } = req.body;
+
+  messages[messages.length - 1].content +=
+    ". Tell me four more sentences of story.";
 
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-    max_tokens: 150,
-    temperature: 1.4,
-    frequency_penalty: 1,
-    presence_penalty: 1,
-    messages: [
-      {
-        role: "system",
-        content: `You're a helpful assistant.}`,
-        // content: `${process.env.GAME_DETAILS}`,
-      },
-    ],
+    max_tokens: 250,
+    temperature: 1.2,
+    messages: messages,
   });
-  const text = completion?.data.choices[0].message;
-  // console.log(text);
+
+  if (completion?.data?.error?.code === "context_length_exceeded") {
+    res.send({ error: "context_length_exceeded" });
+  } else if (completion?.data?.error?.code === "internal_error") {
+    res.send({ error: "internal_error" });
+  }
+  const text = completion.data;
+  // console.log({ text });
   res.send(text);
 });
